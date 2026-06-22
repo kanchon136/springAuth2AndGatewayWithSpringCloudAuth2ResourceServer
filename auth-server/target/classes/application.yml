@@ -1,0 +1,50 @@
+server:
+  port: 9000
+  servlet:
+    session:
+      timeout: 3m # সেশনের মেয়াদ ১ মিনিট করে দিন
+
+spring:
+  application:
+    name: auth-server
+  datasource:
+    url: jdbc:postgresql://localhost:5432/postgres
+    username: postgres
+    password: root
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+  sql:
+    init:
+      mode: always
+      schema-locations: classpath:oauth2-schema.sql
+#spring:
+  security:
+    oauth2:
+      resource server:
+        jwt:
+          # নিজের ইস্যু করা টোকেন নিজেই ভেরিফাই করবে
+          issuer-uri: http://localhost:9000
+
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://localhost:8761/eureka/
+    register-with-eureka: true
+    fetch-registry: true
+  instance:
+    preferIpAddress: true
+    instanceId: ${spring.application.name}:${random.uuid}
+
+logging:
+  level:
+    org.springframework.security: DEBUG
+    org.springframework.security.oauth2: DEBUG
+    org.springframework.web: DEBUG

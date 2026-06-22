@@ -1,0 +1,80 @@
+server:
+  port: 8090
+
+spring:
+  # সেশন টাইমাউট বাদ দেওয়া হয়েছে কারণ রিসোর্স সার্ভার পুরোপুরি Stateless
+  application:
+    name: api-gateway
+
+  cloud:
+    gateway:
+      discovery:
+        locator:
+          enabled: true
+          lower-case-service-id: true
+      default-filters:
+        - TokenRelay= # ইনকামিং হেডার থেকে Bearer JWT টোকেনটি ডাউনস্ট্রিম সার্ভিসে পাস করবে
+        - DedupeResponseHeader=Access-Control-Allow-Origin Access-Control-Allow-Credentials
+        # RemoveRequestHeader=Cookie বাদ দেওয়া হয়েছে, কারণ ক্লায়েন্ট এখন কুকি নয়, সরাসরি টোকেন পাঠাবে
+      routes:
+        # ১. Auth Server Route
+        - id: auth-server
+          uri: lb://AUTH-SERVER
+          predicates:
+            - Path=/roles/**, /users/**, /oauth2/**, /login/**, /logout/**
+          filters:
+            - name: CircuitBreaker
+              args:
+                name: authServerCB
+                fallbackUri: forward:/fallback/oneInAll
+
+        # ২. Main Resource Service
+        - id: resource-service
+          uri: lb://RESOURCE-SERVICE
+          predicates:
+            - Path=/api/sample/**
+          filters:
+            - name: CircuitBreaker
+              args:
+                name: resourceServiceCB
+                fallbackUri: forward:/fallback/oneInAll
+
+  # ওল্ড ওআথ২ ক্লায়েন্ট কনফিগ ডিলিট করে অটোমেটিক jwk-set-uri কনফিগ যোগ করা হলো
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          jwk-set-uri: http://localhost:9000/oauth2/jwks
+          issuer-uri: http://localhost:9000
+
+# Resilience4j Configuration
+resilience4j:
+  circuitbreaker:
+    instances:
+      authServerCB:
+        slidingWindowSize: 10
+        failureRateThreshold: 50
+        waitDurationInOpenState: 10s
+        registerHealthIndicator: true
+      resourceServiceCB:
+        slidingWindowSize: 10
+        failureRateThreshold: 50
+        waitDurationInOpenState: 10s
+        registerHealthIndicator: true
+
+# Eureka Configuration
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://localhost:8761/eureka/
+    register-with-eureka: true
+    fetch-registry: true
+  instance:
+    preferIpAddress: true
+    instanceId: ${spring.application.name}:${random.uuid}
+
+# Logging Configuration
+logging:
+  level:
+    org.springframework.cloud.gateway: DEBUG
+    org.springframework.security: DEBUG
