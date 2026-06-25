@@ -1,7 +1,8 @@
 (অথবা আপনি চাইলে ডাটাবেসের ওই টেবিলের ডাটা ডিলিট করে প্রজেক্ট রিস্টার্ট দিতে পারেন যাতে নতুন সেটিংস নিয়ে ইনসার্ট হয়।)
 
 ২. নতুন Authorization Code নিন
-ব্রাউজারে গিয়ে এই সিম্পল URL-টি ব্যবহার করুন: http://localhost:9000/oauth2/authorize?response_type=code&client_id=client&scope=openid&redirect_uri=https://oauthdebugger.com/debug
+ব্রাউজারে গিয়ে এই সিম্পল URL-টি ব্যবহার করুন:
+http://localhost:9000/oauth2/authorize?response_type=code&client_id=client&scope=openid&redirect_uri=https://oauthdebugger.com/debug
 
 ৩. Postman-এ টোকেন রিকোয়েস্ট (Final Step)
 এবার Postman-এ নিচের কনফিগারেশনে রিকোয়েস্ট দিন:
@@ -91,3 +92,21 @@ Login Page Generation: যেহেতু সেশন নেই, অথ সা�
 ৫টোকেন এক্সচেঞ্জগেটওয়ে + অথ সার্ভার
 ৬ডাটা ডেলিভারিরিসোর্স সার্ভিস (Resource Service)একটি মজার বিষয়:গেটওয়ে কিন্তু প্রতিবার রিসোর্স সার্ভারকে কল করার সময় নতুন করে লগইন চেক করে না। সে তার নিজের কাছে থাকা সেশন কুকি দিয়ে ইউজারকে চিনে রাখে এবং ওই ইউজারের জন্য আগে থেকে সেভ করা টোকেনটি ব্যবহার করে।আপনি কি এই লাইফসাইকেলটি কোডের মাধ্যমে টেস্ট করতে চান? যেমন—লগইন করার পর ব্রাউজারের কুকি ডিলিট করে দিলে কী হয়, তা দেখতে চান? 
 এভাবে প্রাকটিক্যালি দেখলে আপনার কনসেপ্ট আরও পরিষ্কার হবে।
+
+
+-----------------------------authorization code with PKCE for react apllicaiton-------------------------------------
+
+authorization code link
+http://localhost:9000/oauth2/authorize?response_type=code&client_id=react-client&scope=openid&redirect_uri=https://oauthdebugger.com/debug&code_challenge=উপরে_জেনারেট_হওয়া_Challenge_টি_এখানে&code_challenge_method=S256
+---------------------------------------------------------------------------------------
+ code_challenge and code_verifier generator link
+ https://tonyxu-io.github.io/pkce-generator/
+
+---------------------------------------------------------------------------------------
+for token (from data)
+curl --location 'http://localhost:9000/oauth2/token' \
+--form 'grant_type="authorization_code"' \
+--form 'client_id="react-client"' \
+--form 'code="kd2NkZeq2eq4PSctIlkX6nqJN1bgj13lZ6b0EtHDoaoHmc2E9q87W08PGRYXxtIf6uTUvq0SOqz8wQ3zNRXMF8SMwyleq8lMJGeIezXfCirg1qawJ_9uTKBWk5veowvG"' \
+--form 'redirect_uri="https://oauthdebugger.com/debug"' \
+--form 'code_verifier="wuBw7OL5ZnVAmTFtincCK2vRGKTHa_nzpAjEQk0uWP0"'

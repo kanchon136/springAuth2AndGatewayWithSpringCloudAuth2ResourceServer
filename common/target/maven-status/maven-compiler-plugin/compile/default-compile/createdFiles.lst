@@ -1,3 +1,4 @@
+com\example\common\model\Page.class
 com\example\common\enums\RecordStatus.class
 com\example\common\model\Permission$PermissionBuilder.class
 com\example\common\model\BaseEntity$BaseEntityBuilder.class
@@ -5,10 +6,15 @@ com\example\common\model\User$UserBuilderImpl.class
 com\example\common\model\BaseEntity$BaseEntityBuilderImpl.class
 com\example\common\model\User.class
 com\example\common\model\BaseEntity.class
+com\example\common\model\Module$ModuleBuilderImpl.class
 com\example\common\model\Permission.class
 com\example\common\model\Role$RoleBuilder.class
 com\example\common\model\Permission$PermissionBuilderImpl.class
 com\example\common\dto\UserDto.class
+com\example\common\model\Module.class
+com\example\common\model\Page$PageBuilder.class
 com\example\common\model\Role$RoleBuilderImpl.class
 com\example\common\model\Role.class
 com\example\common\model\User$UserBuilder.class
+com\example\common\model\Module$ModuleBuilder.class
+com\example\common\model\Page$PageBuilderImpl.class

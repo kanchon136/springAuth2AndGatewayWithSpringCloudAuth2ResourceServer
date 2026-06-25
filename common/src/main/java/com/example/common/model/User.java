@@ -16,7 +16,7 @@ import java.util.Set;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@SuperBuilder // আপনার BaseEntity যেহেতু SuperBuilder ব্যবহার করছে
+@SuperBuilder
 public class User extends BaseEntity {
 
     @Id
@@ -35,7 +35,7 @@ public class User extends BaseEntity {
     @Builder.Default
     private boolean enabled = true;
 
-    // Production Standard: Keep it LAZY
+    // ইউজারকে রোল অ্যাসাইন করার ম্যাপিং টেবিল
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
             name = "auth_user_roles_mapping",

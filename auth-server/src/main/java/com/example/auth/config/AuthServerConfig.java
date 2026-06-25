@@ -53,17 +53,39 @@ public class AuthServerConfig {
         return new BCryptPasswordEncoder();
     }
 
+//    @Bean
+//    @Order(1)
+//    public SecurityFilterChain authSecurityFilterChain(HttpSecurity http) throws Exception {
+//        OAuth2AuthorizationServerConfiguration.applyDefaultSecurity(http);
+//        http.getConfigurer(OAuth2AuthorizationServerConfigurer.class)
+//                .oidc(Customizer.withDefaults());
+//        http.exceptionHandling(exception -> exception
+//                .authenticationEntryPoint(new LoginUrlAuthenticationEntryPoint("/login")))
+//                .oauth2ResourceServer(resourceServer
+//                       // -> resourceServer.jwt(Customizer.withDefaults()));
+//                        -> resourceServer.jwt(jtw-> jtw.jwtAuthenticationConverter(jwtAuthenticationConverter())));
+//        return http.build();
+//    }
+
+
+
     @Bean
     @Order(1)
     public SecurityFilterChain authSecurityFilterChain(HttpSecurity http) throws Exception {
         OAuth2AuthorizationServerConfiguration.applyDefaultSecurity(http);
+
+        // ওআইডিসি (OIDC) সচল করা
         http.getConfigurer(OAuth2AuthorizationServerConfigurer.class)
                 .oidc(Customizer.withDefaults());
+
+        // ফিক্স: স্প্রিং-কে বলা যে বডি থেকে পাবলিক ক্লায়েন্টের (NONE) অথেন্টিকেশন প্রসেস করতে হবে
+        http.cors(Customizer.withDefaults());
+
         http.exceptionHandling(exception -> exception
-                .authenticationEntryPoint(new LoginUrlAuthenticationEntryPoint("/login")))
+                        .authenticationEntryPoint(new LoginUrlAuthenticationEntryPoint("/login")))
                 .oauth2ResourceServer(resourceServer
-                       // -> resourceServer.jwt(Customizer.withDefaults()));
-                        -> resourceServer.jwt(jtw-> jtw.jwtAuthenticationConverter(jwtAuthenticationConverter())));
+                        -> resourceServer.jwt(jtw -> jtw.jwtAuthenticationConverter(jwtAuthenticationConverter())));
+
         return http.build();
     }
 
@@ -148,6 +170,33 @@ public class AuthServerConfig {
             repository.save(registeredClient);
         }
 
+        // ==========================================
+// ২. নতুন ক্লায়েন্ট (রিয়্যাক্ট ফ্রন্টএন্ড এর জন্য - PKCE সচল এবং পারফেক্ট)
+// ==========================================
+        String reactClientId = "react-client";
+        if (repository.findByClientId(reactClientId) == null) {
+            RegisteredClient reactClient = RegisteredClient.withId(UUID.randomUUID().toString())
+                    .clientId(reactClientId)
+                    // ফিক্স: কোনো সিক্রেট থাকবে না, মেথড হবে NONE
+                    .clientAuthenticationMethod(ClientAuthenticationMethod.NONE)
+                    .authorizationGrantType(AuthorizationGrantType.AUTHORIZATION_CODE)
+                    .authorizationGrantType(AuthorizationGrantType.REFRESH_TOKEN)
+
+                    .redirectUris(uris -> {
+                      //  uris.add("http://localhost:3000/callback");
+                        uris.add("https://oauthdebugger.com/debug");
+                    })
+
+                    .scope(OidcScopes.OPENID)
+                  //  .scope("profile")
+                    .clientSettings(ClientSettings.builder()
+                            .requireProofKey(true) // PKCE সচল থাকবে
+                            .requireAuthorizationConsent(false)
+                            .build())
+                    .build();
+            repository.save(reactClient);
+        }
+
         // it is for service to service communication OR authentication
         String serviceClientId = "internal-service-client";
         if (repository.findByClientId(serviceClientId) == null) {
@@ -203,14 +252,21 @@ public class AuthServerConfig {
         return new org.springframework.security.oauth2.server.authorization.JdbcOAuth2AuthorizationConsentService(
                 jdbcTemplate, registeredClientRepository);
     }
+//
+//    @Bean
+//    public ClientSettings clientSettings() {
+//        return ClientSettings.builder().requireProofKey(false) // PKCE চাইলে true করতে পারেন
+//                .requireAuthorizationConsent(false) // ইউজারের কাছে প্রতিবার পারমিশন চাইবে না
+//                .build();
+//    }
 
     @Bean
     public ClientSettings clientSettings() {
-        return ClientSettings.builder().requireProofKey(false) // PKCE চাইলে true করতে পারেন
-                .requireAuthorizationConsent(false) // ইউজারের কাছে প্রতিবার পারমিশন চাইবে না
+        return ClientSettings.builder()
+                .requireProofKey(true) // 👈 এটিকে false থেকে পরিবর্তন করে true করে দিন
+                .requireAuthorizationConsent(false)
                 .build();
     }
-
     @Bean
     public AuthorizationServerSettings authorizationServerSettings() {
         return AuthorizationServerSettings.builder().issuer("http://localhost:9000").build();
@@ -220,22 +276,6 @@ public class AuthServerConfig {
     public JwtDecoder jwtDecoder(JWKSource<SecurityContext> jwkSource) {
         return OAuth2AuthorizationServerConfiguration.jwtDecoder(jwkSource);
     }
-
-//    @Bean
-//    public OAuth2TokenCustomizer<JwtEncodingContext> jwtTokenCustomizer() {
-//        return (context) -> {
-//            if (OAuth2TokenType.ACCESS_TOKEN.equals(context.getTokenType())) {
-//                Authentication principal = context.getPrincipal();
-//                Set<String> authorities = principal.getAuthorities().stream()
-//                        .map(GrantedAuthority::getAuthority)
-//                        .collect(Collectors.toSet());
-//                log.info("authorities=====>" + authorities);
-//                // Use 'authorities' as the standard claim name for Spring Resource Server
-//                context.getClaims().claim("authorities", authorities);
-//            }
-//        };
-//    }
-
 
     @Bean
     public OAuth2TokenCustomizer<JwtEncodingContext> jwtTokenCustomizer() {

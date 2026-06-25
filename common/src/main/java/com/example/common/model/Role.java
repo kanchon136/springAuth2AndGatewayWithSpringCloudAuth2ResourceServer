@@ -8,7 +8,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Entity
-@Table(name = "auth_roles")
+@Table(name = "auth_roles", indexes = {@Index(name = "idx_auth_role_name", columnList = "name")})
 @Getter
 @Setter
 @NoArgsConstructor
@@ -21,14 +21,17 @@ public class Role extends BaseEntity {
     private Long id;
 
     @Column(nullable = false, unique = true, length = 50)
-    private String name;
+    private String name; // যেমন: "ROLE_ADMIN", "ROLE_HR_MANAGER"
 
-    // Production Standard: Use LAZY to avoid unnecessary data fetching
+    @Column(length = 255)
+    private String description;
+
+    // রোলের অধীনে মডিউল অ্যাসাইন করার ম্যাপিং টেবিল
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
-            name = "auth_role_permissions_mapping",
+            name = "auth_role_modules_mapping",
             joinColumns = @JoinColumn(name = "role_id"),
-            inverseJoinColumns = @JoinColumn(name = "permission_id")
+            inverseJoinColumns = @JoinColumn(name = "module_id")
     )
-    private Set<Permission> permissions = new HashSet<>();
+    private Set<Module> modules = new HashSet<>();
 }
