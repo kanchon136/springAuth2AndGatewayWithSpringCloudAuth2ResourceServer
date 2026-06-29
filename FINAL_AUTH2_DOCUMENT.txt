@@ -100,6 +100,7 @@ authorization code link
 http://localhost:9000/oauth2/authorize?response_type=code&client_id=react-client&scope=openid&redirect_uri=https://oauthdebugger.com/debug&code_challenge=উপরে_জেনারেট_হওয়া_Challenge_টি_এখানে&code_challenge_method=S256
 ---------------------------------------------------------------------------------------
  code_challenge and code_verifier generator link
+
  https://tonyxu-io.github.io/pkce-generator/
 
 ---------------------------------------------------------------------------------------
@@ -110,3 +111,8 @@ curl --location 'http://localhost:9000/oauth2/token' \
 --form 'code="kd2NkZeq2eq4PSctIlkX6nqJN1bgj13lZ6b0EtHDoaoHmc2E9q87W08PGRYXxtIf6uTUvq0SOqz8wQ3zNRXMF8SMwyleq8lMJGeIezXfCirg1qawJ_9uTKBWk5veowvG"' \
 --form 'redirect_uri="https://oauthdebugger.com/debug"' \
 --form 'code_verifier="wuBw7OL5ZnVAmTFtincCK2vRGKTHa_nzpAjEQk0uWP0"'
+
+
+
+youtuve link-------------------------------------
+https://www.youtube.com/watch?v=H1SmCoirFCo

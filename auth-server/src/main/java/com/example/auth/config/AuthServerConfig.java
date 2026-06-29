@@ -44,7 +44,7 @@ import java.util.stream.Collectors;
 
 @Configuration
 @EnableWebSecurity
-@EnableMethodSecurity
+//@EnableMethodSecurity
 @Slf4j
 public class AuthServerConfig {
 
@@ -84,7 +84,8 @@ public class AuthServerConfig {
         http.exceptionHandling(exception -> exception
                         .authenticationEntryPoint(new LoginUrlAuthenticationEntryPoint("/login")))
                 .oauth2ResourceServer(resourceServer
-                        -> resourceServer.jwt(jtw -> jtw.jwtAuthenticationConverter(jwtAuthenticationConverter())));
+                       // -> resourceServer.jwt(jtw -> jtw.jwtAuthenticationConverter(jwtAuthenticationConverter())));
+                        -> resourceServer.jwt(Customizer.withDefaults()));
 
         return http.build();
     }
@@ -105,7 +106,8 @@ public class AuthServerConfig {
                         .permitAll()
                 )
                 .oauth2ResourceServer(resourceServer -> resourceServer
-                        .jwt(jwt -> jwt.jwtAuthenticationConverter(jwtAuthenticationConverter()))
+                       // .jwt(jwt -> jwt.jwtAuthenticationConverter(jwtAuthenticationConverter()))
+                        .jwt(Customizer.withDefaults())
                 )
                 .logout(logout -> logout
                         .logoutRequestMatcher(new AntPathRequestMatcher("/logout", "GET"))

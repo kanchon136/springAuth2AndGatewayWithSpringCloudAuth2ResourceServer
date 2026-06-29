@@ -1,6 +1,0 @@
-com\example\resource\controller\ResourceController.class
-com\example\resource\ResourceServiceApplication.class
-com\example\resource\config\ResourceServerConfig.class
-com\example\resource\serviceImpl\MyInternalService.class
-com\example\resource\controller\SampleController.class
-com\example\resource\config\WebClientConfig.class
