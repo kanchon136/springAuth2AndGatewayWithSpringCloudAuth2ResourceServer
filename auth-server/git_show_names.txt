@@ -1,0 +1,48 @@
+commit f8aa610af876d76042286eb59ed2ddb0ba548eab
+Author: kanchon136 <miakanchon5100@gmail.ocm>
+Date:   Thu Jul 2 17:16:04 2026 +0600
+
+    twoCommitMergeAllAreSeperateControler
+
+D	DETAILED_INSTRUCTIONS.md
+D	IMPLEMENTATION_GUIDE.md
+D	OAUTH2_GUIDE.md
+D	PERMISSION_BASED_ACCESS_GUIDE.md
+M	api-gateway/.factorypath
+M	auth-server/.factorypath
+M	auth-server/src/main/java/com/example/auth/config/AuthServerConfig.java
+D	auth-server/src/main/java/com/example/auth/controller/AuthController.java
+A	auth-server/src/main/java/com/example/auth/controller/ModuleController.java
+A	auth-server/src/main/java/com/example/auth/controller/PageController.java
+A	auth-server/src/main/java/com/example/auth/controller/PermissionController.java
+M	auth-server/src/main/java/com/example/auth/controller/RoleController.java
+M	auth-server/src/main/java/com/example/auth/controller/UserController.java
+A	auth-server/src/main/java/com/example/auth/dto/BaseResponse.java
+A	auth-server/src/main/java/com/example/auth/dto/ModuleDto.java
+A	auth-server/src/main/java/com/example/auth/dto/ModuleParam.java
+A	auth-server/src/main/java/com/example/auth/dto/PageDto.java
+A	auth-server/src/main/java/com/example/auth/dto/PageParam.java
+A	auth-server/src/main/java/com/example/auth/dto/PaginatedResponse.java
+A	auth-server/src/main/java/com/example/auth/dto/PermissionDto.java
+A	auth-server/src/main/java/com/example/auth/dto/PermissionParam.java
+A	auth-server/src/main/java/com/example/auth/dto/ResponseEnum.java
+A	auth-server/src/main/java/com/example/auth/dto/RoleDto.java
+A	auth-server/src/main/java/com/example/auth/dto/RoleParam.java
+A	auth-server/src/main/java/com/example/auth/dto/UserDto.java
+A	auth-server/src/main/java/com/example/auth/dto/UserParam.java
+D	auth-server/src/main/java/com/example/auth/impl/AuthServiceImpl.java
+A	auth-server/src/main/java/com/example/auth/impl/ModuleServiceImpl.java
+A	auth-server/src/main/java/com/example/auth/impl/PageServiceImpl.java
+A	auth-server/src/main/java/com/example/auth/impl/PermissionServiceImpl.java
+A	auth-server/src/main/java/com/example/auth/impl/RoleServiceImpl.java
+A	auth-server/src/main/java/com/example/auth/impl/UserServiceImpl.java
+A	auth-server/src/main/java/com/example/auth/mapper/EntityMapper.java
+D	auth-server/src/main/java/com/example/auth/service/AuthService.java
+A	auth-server/src/main/java/com/example/auth/service/ModuleService.java
+A	auth-server/src/main/java/com/example/auth/service/PageService.java
+A	auth-server/src/main/java/com/example/auth/service/PermissionService.java
+D	auth-server/src/main/java/com/example/auth/service/RoleManagementService.java
+A	auth-server/src/main/java/com/example/auth/service/RoleService.java
+D	auth-server/src/main/java/com/example/auth/service/UserManagementService.java
+M	auth-server/src/main/java/com/example/auth/service/UserService.java
+M	resource-service/.classpath
