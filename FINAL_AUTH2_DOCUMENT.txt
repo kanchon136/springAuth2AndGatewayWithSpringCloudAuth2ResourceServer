@@ -116,3 +116,6 @@ curl --location 'http://localhost:9000/oauth2/token' \
 
 youtuve link-------------------------------------
 https://www.youtube.com/watch?v=H1SmCoirFCo
+
+================pkce generator link===================================
+https://tonyxu-io.github.io/pkce-generator/
